@@ -10,6 +10,8 @@ import React, { useEffect, useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
 import { validateInput } from "../utils";
 import { useNavigate } from "react-router-dom";
+import { auth } from '../firebaseConfig';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export const Signup = () => {
   const [signupData, setSignupData] = useState({
@@ -22,8 +24,18 @@ export const Signup = () => {
 
   const [formDisabled, setFormDisabled] = useState(true);
 
-  const handleSignup = () => {
-    navigate('/');
+  const handleSignup = async () => {
+   
+
+   try {
+    const user =  await createUserWithEmailAndPassword(auth, signupData.email, signupData.password);
+     if (user) {
+      alert('User Created Succesfully');
+      navigate('/login');
+     }
+   } catch (error) {
+      console.log(error, 'error');
+   }
   }
 
   // if all the fields are having a value, then return false other wise return true.
