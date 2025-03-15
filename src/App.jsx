@@ -1,19 +1,14 @@
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import AppButton from "./components/AppButton";
+import { HomePage } from "./pages/HomePage";
 
 function App() {
-  const handleOnClick = () => {
-    alert("Button was clicked");
-  };
 
   return (
     <>
-      <AppButton
-        type="contained"
-        action="error"
-        disabled={false}
-        handleOnClick={handleOnClick}
-      />
+      <Routes>
+        <Route element={<HomePage />} path="/" />
+      </Routes>
     </>
   );
 }
