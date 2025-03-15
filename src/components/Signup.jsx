@@ -29,7 +29,6 @@ export const Signup = () => {
   // if all the fields are having a value, then return false other wise return true.
   useEffect(() => {
     const isDisabled = validateInput([signupData.name, signupData.email, signupData.password]);
-    console.log(isDisabled);
     setFormDisabled(isDisabled);
   }, [signupData]);
 
