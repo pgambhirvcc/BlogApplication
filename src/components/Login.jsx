@@ -8,53 +8,46 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
-import { validateInput } from "../utils";
 import { useNavigate } from "react-router-dom";
+import { validateInput } from "../utils";
 
-export const Signup = () => {
-  const [signupData, setSignupData] = useState({
-    name: "",
+export const Login = () => {
+  const [loginData, setLoginData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
-
-  const navigate = useNavigate();
 
   const [formDisabled, setFormDisabled] = useState(true);
 
-  const handleSignup = () => {
-    navigate('/');
-  }
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/home");
+  };
 
   // if all the fields are having a value, then return false other wise return true.
   useEffect(() => {
-    const isDisabled = validateInput([signupData.name, signupData.email, signupData.password]);
+    const isDisabled = validateInput([
+      loginData.email,
+      loginData.password,
+    ]);
     setFormDisabled(isDisabled);
-  }, [signupData]);
+  }, [loginData]);
 
   return (
     <Card className="auth-card">
       <CardContent>
         <Box display="flex" flexDirection="column" gap="12px">
-          <Typography variant="h3">Signup Here!</Typography>
+          <Typography variant="h3">Login Here!</Typography>
 
-          <TextField
-            id="FullName"
-            label="Full Name"
-            variant="outlined"
-            value={signupData.name}
-            onChange={(e) =>
-              setSignupData({ ...signupData, name: e.target.value })
-            }
-          />
           <TextField
             id="Email"
             label="Email"
             type="email"
             variant="outlined"
-            value={signupData.email}
+            value={loginData.email}
             onChange={(e) =>
-              setSignupData({ ...signupData, email: e.target.value })
+              setLoginData({ ...loginData, email: e.target.value })
             }
           />
           <TextField
@@ -62,15 +55,20 @@ export const Signup = () => {
             label="Password"
             type="password"
             variant="outlined"
-            value={signupData.password}
+            value={loginData.password}
             onChange={(e) =>
-              setSignupData({ ...signupData, password: e.target.value })
+              setLoginData({ ...loginData, password: e.target.value })
             }
           />
 
-          <Button variant="contained" color="primary" onClick={handleSignup} disabled={formDisabled}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleLogin}
+            disabled={formDisabled}
+          >
             <LoginIcon />
-            Signup
+            Login
           </Button>
         </Box>
       </CardContent>
