@@ -1,25 +1,50 @@
 import { Box, Button, Dialog, DialogContent, DialogContentText, DialogTitle, MenuItem, Select, TextField } from "@mui/material";
-import { useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { db } from "../firebaseConfig";
+import { validateInput } from "../utils";
 
 const categories = ["Tech", "News", "Fashion", "Sports", "Food"];
+const INPUT_DEFAULT = {
+  title: "",
+  description: "",
+  image: "",
+  category: "",
+};
 
 const CreateBlog = (props) => {
-
   const navigate = useNavigate();
 
-  const [createBlogInfo, setCreateBlogInfo] = useState({
-    title: "",
-    description: "",
-    image: "",
-    category: "",
-  });
+  const [createBlogInfo, setCreateBlogInfo] = useState(INPUT_DEFAULT);
+  const [formDisabled, setFormDisabled] = useState(true);
 
-  const handleOnSubmit = () => {
-    console.log(createBlogInfo);
-    props.setIsDialogOpen(false);
-    navigate("/");
+  // if all the fields are having a value, then return false other wise return true.
+  useEffect(() => {
+    const isDisabled = validateInput([
+      createBlogInfo.title,
+      createBlogInfo.description,
+      createBlogInfo.image,
+      createBlogInfo.category,
+    ]);
+    setFormDisabled(isDisabled);
+  }, [createBlogInfo]);
+
+  const handleOnSubmit = async () => {
+    try {
+      const collectionRef = collection(db, "blogs");
+
+      await addDoc(collectionRef, createBlogInfo);
+      setCreateBlogInfo(INPUT_DEFAULT);
+      props.setIsDialogOpen(false);
+      alert('Blog Published... WOHOOO!');
+      navigate("/");
+    } catch (error) {
+      alert('Blog Published Flaied... Check Console :(');
+      console.log(error);
+    }
   };
+  
   return (
     <Dialog open={props.isDialogOpen}>
       <DialogTitle>Create a blog</DialogTitle>
@@ -83,7 +108,7 @@ const CreateBlog = (props) => {
             })}
           </Select>
 
-          <Button variant="contained" onClick={handleOnSubmit}>
+          <Button disabled={formDisabled} variant="contained" onClick={handleOnSubmit}>
             Submit
           </Button>
         </Box>
