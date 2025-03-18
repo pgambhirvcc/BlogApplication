@@ -6,11 +6,14 @@ import { db } from "../firebaseConfig";
 import { validateInput } from "../utils";
 
 const categories = ["Tech", "News", "Fashion", "Sports", "Food"];
+const userEmail = JSON.parse(localStorage.getItem("user"))?.user?.email;
+
 const INPUT_DEFAULT = {
   title: "",
   description: "",
   image: "",
   category: "",
+  author: userEmail
 };
 
 const CreateBlog = (props) => {
@@ -38,6 +41,8 @@ const CreateBlog = (props) => {
       setCreateBlogInfo(INPUT_DEFAULT);
       props.setIsDialogOpen(false);
       alert('Blog Published... WOHOOO!');
+      // HACK
+      window.location.reload();
       navigate("/");
     } catch (error) {
       alert('Blog Published Flaied... Check Console :(');
