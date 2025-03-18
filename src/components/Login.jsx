@@ -30,7 +30,7 @@ export const Login = () => {
         if (user) {
          alert('Logged in Succesfully');
          localStorage.setItem('user', JSON.stringify(user));
-         navigate('/home');
+         navigate('/');
         }
       } catch (error) {
         alert(error.message);
