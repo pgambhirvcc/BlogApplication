@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebaseConfig";
 import { validateInput } from "../utils";
+import { categories } from "../constant";
 
-const categories = ["Tech", "News", "Fashion", "Sports", "Food"];
 const userEmail = JSON.parse(localStorage.getItem("user"))?.user?.email;
 
 const INPUT_DEFAULT = {
@@ -108,7 +108,7 @@ const CreateBlog = (props) => {
               })
             }
           >
-            {categories.map((category, index) => {
+            {categories.slice(1).map((category, index) => {
               return (
                 <MenuItem key={index} value={category}>
                   {category}
