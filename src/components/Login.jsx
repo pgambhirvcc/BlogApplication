@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardContent,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -12,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { validateInput } from "../utils";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleAuthProvider } from "../firebaseConfig";
-import GoogleIcon from '@mui/icons-material/Google';
+import GoogleIcon from "@mui/icons-material/Google";
 
 export const Login = () => {
   const [loginData, setLoginData] = useState({
@@ -21,45 +22,47 @@ export const Login = () => {
   });
 
   const [formDisabled, setFormDisabled] = useState(true);
+  const [openNotification, setOpenNotification] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-   
-      try {
-       const user =  await signInWithEmailAndPassword(auth, loginData.email, loginData.password);
-        if (user) {
-         alert('Logged in Succesfully');
-         localStorage.setItem('user', JSON.stringify(user));
-         navigate('/');
-        }
-      } catch (error) {
-          alert(error.message);
-          console.log(error.message, 'error');
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        loginData.email,
+        loginData.password
+      );
+      if (user) {
+        setOpenNotification(true);
+        localStorage.setItem("user", JSON.stringify(user));
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       }
+    } catch (error) {
+      alert(error.message);
+      console.log(error.message, "error");
+    }
   };
 
   const handleLoginWithGoogle = async () => {
     try {
-      const user = await signInWithPopup(auth, googleAuthProvider)
+      const user = await signInWithPopup(auth, googleAuthProvider);
       if (user) {
-        alert('Logged in Succesfully');
-         localStorage.setItem('user', JSON.stringify(user));
-         navigate('/');
+        setOpenNotification(true);
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate("/");
       }
     } catch (error) {
-        alert(error.message);
-        console.log(error.message, 'error');
+      alert(error.message);
+      console.log(error.message, "error");
     }
-
-  }
+  };
 
   // if all the fields are having a value, then return false other wise return true.
   useEffect(() => {
-    const isDisabled = validateInput([
-      loginData.email,
-      loginData.password,
-    ]);
+    const isDisabled = validateInput([loginData.email, loginData.password]);
     setFormDisabled(isDisabled);
   }, [loginData]);
 
@@ -107,12 +110,17 @@ export const Login = () => {
             </Box>
           </Button>
 
-
           <Box textAlign="center">
             <Link to="/signup">Doesnot have an account ?</Link>
           </Box>
         </Box>
       </CardContent>
+
+      <Snackbar
+        open={openNotification}
+        autoHideDuration={6000}
+        message="Login in succesful"
+      />
     </Card>
   );
 };

@@ -1,4 +1,5 @@
-import { Box, Button, Dialog, DialogContent, DialogContentText, DialogTitle, MenuItem, Select, TextField } from "@mui/material";
+/* eslint-disable react/prop-types */
+import { Box, Button, Dialog, DialogContent, DialogContentText, DialogTitle, MenuItem, Select, Snackbar, TextField } from "@mui/material";
 import { addDoc, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +22,7 @@ const CreateBlog = (props) => {
 
   const [createBlogInfo, setCreateBlogInfo] = useState(INPUT_DEFAULT);
   const [formDisabled, setFormDisabled] = useState(true);
+  const [openNotification, setOpenNotification] = useState(false);
 
   // if all the fields are having a value, then return false other wise return true.
   useEffect(() => {
@@ -39,11 +41,13 @@ const CreateBlog = (props) => {
 
       await addDoc(collectionRef, createBlogInfo);
       setCreateBlogInfo(INPUT_DEFAULT);
-      props.setIsDialogOpen(false);
-      alert('Blog Published... WOHOOO!');
+      setOpenNotification(true);
       // HACK
-      window.location.reload();
-      navigate("/");
+      setTimeout(() => {
+        props.setIsDialogOpen(false);
+        window.location.reload();
+        navigate("/");
+      }, 2000);
     } catch (error) {
       alert('Blog Published Flaied... Check Console :(');
       console.log(error);
@@ -113,11 +117,21 @@ const CreateBlog = (props) => {
             })}
           </Select>
 
-          <Button disabled={formDisabled} variant="contained" onClick={handleOnSubmit}>
+          <Button
+            disabled={formDisabled}
+            variant="contained"
+            onClick={handleOnSubmit}
+          >
             Submit
           </Button>
         </Box>
       </DialogContent>
+
+      <Snackbar
+        open={openNotification}
+        autoHideDuration={6000}
+        message="Blog Created Succesfully"
+      />
     </Dialog>
   );
 };
