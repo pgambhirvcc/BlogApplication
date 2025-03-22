@@ -2,18 +2,13 @@ import {
   AppBar,
   Box,
   Button,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  MenuItem,
-  Select,
-  TextField,
   Toolbar,
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateBlog from "./CreateBlog";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -28,6 +23,12 @@ const Navbar = () => {
     setIsDialogOpen(true);
   };
 
+  const handleSignout = async () => {
+    await signOut(auth);
+    localStorage.removeItem("user");
+    navigate("/login");
+  }
+
   return (
     <div>
       <AppBar component="nav">
@@ -41,14 +42,18 @@ const Navbar = () => {
               Home
             </Button>
 
-            <Button
-              className="create-blog-button"
-              variant="contained"
-              onClick={openDialogBox}
-            >
-              Create Blog +
-            </Button>
-
+            <Box display="flex" gap="8px">
+              <Button
+                className="create-blog-button"
+                variant="contained"
+                onClick={openDialogBox}
+              >
+                Create Blog +
+              </Button>
+              <Button variant="contained" color="error" onClick={handleSignout}>
+                Signout
+              </Button>
+            </Box>
             <CreateBlog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
 
           </Box>
