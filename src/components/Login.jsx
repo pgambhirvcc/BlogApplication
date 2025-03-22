@@ -10,8 +10,9 @@ import React, { useEffect, useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
 import { Link, useNavigate } from "react-router-dom";
 import { validateInput } from "../utils";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleAuthProvider } from "../firebaseConfig";
+import GoogleIcon from '@mui/icons-material/Google';
 
 export const Login = () => {
   const [loginData, setLoginData] = useState({
@@ -33,10 +34,25 @@ export const Login = () => {
          navigate('/');
         }
       } catch (error) {
-        alert(error.message);
-         console.log(error.message, 'error');
+          alert(error.message);
+          console.log(error.message, 'error');
       }
   };
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      const user = await signInWithPopup(auth, googleAuthProvider)
+      if (user) {
+        alert('Logged in Succesfully');
+         localStorage.setItem('user', JSON.stringify(user));
+         navigate('/');
+      }
+    } catch (error) {
+        alert(error.message);
+        console.log(error.message, 'error');
+    }
+
+  }
 
   // if all the fields are having a value, then return false other wise return true.
   useEffect(() => {
@@ -82,6 +98,13 @@ export const Login = () => {
           >
             <LoginIcon />
             Login
+          </Button>
+
+          <Button variant="outlined" onClick={handleLoginWithGoogle}>
+            <Box display="flex" gap="8px">
+              <GoogleIcon />
+              <span>Signin with Google</span>
+            </Box>
           </Button>
 
 
