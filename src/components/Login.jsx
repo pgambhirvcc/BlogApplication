@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { validateInput } from "../utils";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig";
@@ -83,6 +83,11 @@ export const Login = () => {
             <LoginIcon />
             Login
           </Button>
+
+
+          <Box textAlign="center">
+            <Link to="/signup">Doesnot have an account ?</Link>
+          </Box>
         </Box>
       </CardContent>
     </Card>
