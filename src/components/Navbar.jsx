@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CreateBlog from "./CreateBlog";
+import ManageBlog from "./ManageBlog";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
@@ -54,7 +54,7 @@ const Navbar = () => {
                 Signout
               </Button>
             </Box>
-            <CreateBlog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+            <ManageBlog operationType="CREATE" isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
 
           </Box>
         </Toolbar>

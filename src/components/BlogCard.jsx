@@ -14,9 +14,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import ManageBlog from "./ManageBlog";
 
 const BlogCard = (props) => {
   const [openNotification, setOpenNotification] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const loggedInUser = JSON.parse(localStorage.getItem("user"))?.user?.email;
 
   const calculateCategoryColor = () => {
     switch (props.data.category) {
@@ -57,13 +61,25 @@ const BlogCard = (props) => {
             {props.data.title}
           </Typography>
 
-          <IconButton
-            aria-label="delete"
-            onClick={handleDeleteBlog}
-            color="error"
-          >
-            <DeleteIcon />
-          </IconButton>
+          {loggedInUser === props.data.author && (
+            <Box>
+              <IconButton
+                aria-label="Edit"
+                color="primary"
+                onClick={() => setIsDialogOpen(true)}
+              >
+                <EditIcon />
+              </IconButton>
+
+              <IconButton
+                aria-label="delete"
+                onClick={handleDeleteBlog}
+                color="error"
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          )}
         </Box>
 
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -91,6 +107,13 @@ const BlogCard = (props) => {
         open={openNotification}
         autoHideDuration={6000}
         message={`Blog ${props.data.title} deleted successfully`}
+      />
+
+      <ManageBlog
+        operationType="EDIT"
+        blog={props.data}
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
       />
     </Card>
   );
