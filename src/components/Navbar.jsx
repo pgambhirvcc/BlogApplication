@@ -3,15 +3,19 @@ import {
   Box,
   Button,
   Toolbar,
+  Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ManageBlog from "./ManageBlog";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig";
+import UserContext from "../context/UserContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const data = useContext(UserContext);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -34,13 +38,16 @@ const Navbar = () => {
       <AppBar component="nav">
         <Toolbar>
           <Box display="flex" justifyContent="space-between" width="100%">
-            <Button
-              className="navButton"
-              variant="outlined"
-              onClick={navigateToHome}
-            >
-              Home
-            </Button>
+            <Box display="flex" gap="20px" alignItems="center">
+              <Typography>Welcome, {data.user.name}</Typography>
+              <Button
+                className="navButton"
+                variant="outlined"
+                onClick={navigateToHome}
+              >
+                Home
+              </Button>
+            </Box>
 
             <Box display="flex" gap="8px">
               <Button

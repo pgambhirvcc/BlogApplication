@@ -13,14 +13,16 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import ManageBlog from "./ManageBlog";
+import UserContext from "../context/UserContext";
 
 const BlogCard = (props) => {
   const [openNotification, setOpenNotification] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const loggedInUser = JSON.parse(localStorage.getItem("user"))?.user?.email;
+
+  const data = useContext(UserContext);
 
   const calculateCategoryColor = () => {
     switch (props.data.category) {
@@ -61,7 +63,7 @@ const BlogCard = (props) => {
             {props.data.title}
           </Typography>
 
-          {loggedInUser === props.data.author && (
+          {data.user.email === props.data.author && (
             <Box>
               <IconButton
                 aria-label="Edit"

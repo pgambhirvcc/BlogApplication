@@ -11,13 +11,15 @@ import React, { useEffect, useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
 import { validateInput } from "../utils";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 
 export const Signup = () => {
   const [signupData, setSignupData] = useState({
     name: "",
     email: "",
+    dob: new Date(),
     password: "",
   });
 
@@ -34,11 +36,21 @@ export const Signup = () => {
         signupData.password
       );
       if (user) {
+      const userObject = {
+        name: signupData.name,
+        email: signupData.email,
+        dob: signupData.dob
+      }
+      const collectionRef = collection(db, "users");
+      await addDoc(collectionRef, userObject);
+
         setOpenNotification(true);
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       }
+
+      console.log(signupData, 'signup')
     } catch (error) {
       console.log(error, "error");
     }
@@ -79,6 +91,17 @@ export const Signup = () => {
               setSignupData({ ...signupData, email: e.target.value })
             }
           />
+
+          <TextField
+            id="dob"
+            type="date"
+            variant="outlined"
+            value={signupData.dob}
+            onChange={(e) =>
+              setSignupData({ ...signupData, dob: e.target.value })
+            }
+          />
+
           <TextField
             id="Password"
             label="Password"

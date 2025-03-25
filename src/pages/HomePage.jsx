@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, MenuItem, Select } from "@mui/material";
 import BlogCard from "../components/BlogCard";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { categories } from "../constant";
+import UserContext from "../context/UserContext";
 
 export const HomePage = () => {
   const [blogsData, setBlogsData] = useState([]);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const data = useContext(UserContext);
 
   const getBlogsData = async () => {
     const collectionRef = collection(db, "blogs");
@@ -24,8 +27,6 @@ export const HomePage = () => {
     setBlogsData(extractedData);
     setFilteredBlogs(extractedData);
   };
-
-  
 
   const filterBlogs = (filteredCategory) => {
 
@@ -80,3 +81,4 @@ export const HomePage = () => {
     </Box>
   );
 };
+  

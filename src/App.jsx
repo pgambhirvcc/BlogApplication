@@ -5,29 +5,38 @@ import { SignupPage } from "./pages/SignupPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
+import UserContext from "./context/UserContext";
 
 function App() {
-
-
   const navigate = useNavigate();
-  const [isUserLoggedIn, setUserLoggedIn] = useState(false);
+  // const [isUserLoggedIn, setUserLoggedIn] = useState(false);
+  const [user, setUser] = useState();
 
   useEffect(() => {
-    const isUserAuthenticated = JSON.parse(localStorage.getItem("user"));
-    setUserLoggedIn(isUserAuthenticated)
-    if (!isUserAuthenticated) {
+    const userFromStorage = JSON.parse(localStorage.getItem("user"));
+    // setUserLoggedIn(isUserAuthenticated);
+    setUser({
+      isUserAuthenticated: userFromStorage ? true: false,
+      user: {
+        name: userFromStorage && userFromStorage.user.displayName,
+        email: userFromStorage && userFromStorage.user.email
+      }
+    })
+    if (!userFromStorage) {
       navigate("/login");
     }
   }, []);
 
   return (
     <>
-      { isUserLoggedIn ? <Navbar /> : null }
-      <Routes>
-        <Route element={<HomePage />} path="/" />
-        <Route element={<SignupPage />} path="/signup" />
-        <Route element={<LoginPage />} path="/login" />
-      </Routes>
+      <UserContext.Provider value={user}>
+        {user?.isUserAuthenticated ? <Navbar /> : null}
+          <Routes>
+            <Route element={<HomePage />} path="/" />
+            <Route element={<SignupPage />} path="/signup" />
+            <Route element={<LoginPage />} path="/login" />
+          </Routes>
+      </UserContext.Provider>
     </>
   );
 }
