@@ -20,7 +20,7 @@ import UserContext from "../context/UserContext";
 
 const BlogCard = (props) => {
   const [openNotification, setOpenNotification] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(true);
 
   const data = useContext(UserContext);
 
